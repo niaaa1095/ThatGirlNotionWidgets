@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  margin: 0;
+  background: #F7EFE5;
+  font-family: Poppins, sans-serif;
+  color: #5A4A42;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.date {
+  text-align: center;
+}
+.day {
+  font-size: 28px;
+}
+.full-date {
+  font-size: 16px;
+}
+</style>
+</head>
+<body>
+<div class="date">
+  <div class="day" id="day"></div>
+  <div class="full-date" id="fullDate"></div>
+</div>
+
+<script>
+const now = new Date();
+document.getElementById("day").innerText =
+  now.toLocaleDateString(undefined, { weekday: 'long' });
+document.getElementById("fullDate").innerText =
+  now.toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
+</script>
+</body>
+</html>
