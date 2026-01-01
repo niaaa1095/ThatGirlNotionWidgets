@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Monthly Calendar</title>
+  <title>Calendar</title>
   <style>
     body {
       margin: 0;
@@ -16,16 +16,35 @@
     }
 
     .calendar {
-      width: 300px;
+      width: 320px;
     }
 
     .header {
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 10px;
     }
 
+    .nav {
+      cursor: pointer;
+      font-size: 18px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      user-select: none;
+    }
+
+    .nav:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .title {
+      text-align: center;
+      flex: 1;
+    }
+
     .month {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
       letter-spacing: 2px;
     }
@@ -33,7 +52,6 @@
     .year {
       font-size: 12px;
       opacity: 0.6;
-      margin-top: 2px;
     }
 
     .weekdays, .days {
@@ -54,14 +72,14 @@
       border-radius: 6px;
     }
 
+    .other-month {
+      opacity: 0.25;
+    }
+
     .today {
       background: #fff;
       color: #000;
       font-weight: bold;
-    }
-
-    .empty {
-      opacity: 0.2;
     }
   </style>
 </head>
@@ -69,64 +87,101 @@
 
   <div class="calendar">
     <div class="header">
-      <div class="month" id="month"></div>
-      <div class="year" id="year"></div>
+      <div class="nav" id="prev">&#10094;</div>
+      <div class="title">
+        <div class="month" id="month"></div>
+        <div class="year" id="year"></div>
+      </div>
+      <div class="nav" id="next">&#10095;</div>
     </div>
 
     <div class="weekdays">
-      <div>MO</div>
-      <div>TU</div>
-      <div>WE</div>
-      <div>TH</div>
-      <div>FR</div>
-      <div>SA</div>
-      <div>SU</div>
+      <div>MO</div><div>TU</div><div>WE</div>
+      <div>TH</div><div>FR</div><div>SA</div><div>SU</div>
     </div>
 
     <div class="days" id="days"></div>
   </div>
 
-  <script>
-    const now = new Date();
-    const monthEl = document.getElementById("month");
-    const yearEl = document.getElementById("year");
-    const daysEl = document.getElementById("days");
+<script>
+  const monthEl = document.getElementById("month");
+  const yearEl = document.getElementById("year");
+  const daysEl = document.getElementById("days");
 
-    const months = [
-      "JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE",
-      "JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"
-    ];
+  const prevBtn = document.getElementById("prev");
+  const nextBtn = document.getElementById("next");
 
-    const year = now.getFullYear();
-    const month = now.getMonth();
-    const today = now.getDate();
+  const months = [
+    "JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE",
+    "JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"
+  ];
+
+  let currentDate = new Date();
+  const today = new Date();
+
+  function renderCalendar() {
+    daysEl.innerHTML = "";
+
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
 
     monthEl.textContent = months[month];
     yearEl.textContent = year;
 
     const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    // Adjust for Monday start
     const startDay = firstDay === 0 ? 6 : firstDay - 1;
 
-    for (let i = 0; i < startDay; i++) {
-      const empty = document.createElement("div");
-      empty.classList.add("empty");
-      daysEl.appendChild(empty);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const prevMonthDays = new Date(year, month, 0).getDate();
+
+    // Previous month dates
+    for (let i = startDay - 1; i >= 0; i--) {
+      const d = document.createElement("div");
+      d.textContent = prevMonthDays - i;
+      d.classList.add("other-month");
+      daysEl.appendChild(d);
     }
 
+    // Current month dates
     for (let d = 1; d <= daysInMonth; d++) {
       const day = document.createElement("div");
       day.textContent = d;
 
-      if (d === today) {
+      if (
+        d === today.getDate() &&
+        month === today.getMonth() &&
+        year === today.getFullYear()
+      ) {
         day.classList.add("today");
       }
 
       daysEl.appendChild(day);
     }
-  </script>
+
+    // Next month dates (to complete 6 rows)
+    const totalCells = daysEl.children.length;
+    const remaining = 42 - totalCells;
+
+    for (let i = 1; i <= remaining; i++) {
+      const d = document.createElement("div");
+      d.textContent = i;
+      d.classList.add("other-month");
+      daysEl.appendChild(d);
+    }
+  }
+
+  prevBtn.onclick = () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+  };
+
+  nextBtn.onclick = () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+  };
+
+  renderCalendar();
+</script>
 
 </body>
 </html>
