@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  margin: 0;
+  background: #F7EFE5;
+  font-family: Poppins, sans-serif;
+  color: #5A4A42;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+.quote {
+  font-size: 18px;
+  padding: 20px;
+}
+</style>
+</head>
+<body>
+<div class="quote" id="quote"></div>
+
+<script>
+const affirmations = [
+  "I am becoming that girl.",
+  "Discipline is my self-love.",
+  "I plan my life with intention.",
+  "My routines shape my future.",
+  "Soft life, strong mindset."
+];
+
+document.getElementById("quote").innerText =
+  affirmations[Math.floor(Math.random() * affirmations.length)];
+</script>
+</body>
+</html>
