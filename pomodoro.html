@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  margin: 0;
+  background: #F7EFE5;
+  font-family: Poppins, sans-serif;
+  color: #5A4A42;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+}
+.timer {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  background: #D6C3B6;
+  color: #5A4A42;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="timer" id="timer">25:00</div>
+<button onclick="start()">Start Focus</button>
+
+<script>
+let time = 25 * 60;
+let interval;
+
+function start() {
+  clearInterval(interval);
+  interval = setInterval(() => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    document.getElementById("timer").innerText =
+      `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    time--;
+    if (time < 0) clearInterval(interval);
+  }, 1000);
+}
+</script>
+</body>
+</html>
