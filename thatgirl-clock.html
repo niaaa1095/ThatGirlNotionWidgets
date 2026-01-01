@@ -1,34 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<style>
-body {
-  margin: 0;
-  background: #F7EFE5;
-  font-family: Poppins, sans-serif;
-  color: #5A4A42;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-.clock {
-  font-size: 36px;
-  letter-spacing: 2px;
-}
-</style>
+  <meta charset="UTF-8" />
+  <title>Flip Clock</title>
+  <style>
+    body {
+      margin: 0;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .clock {
+      display: flex;
+      gap: 12px;
+    }
+
+    .flip-card {
+      background: #000;
+      color: #fff;
+      width: 80px;
+      height: 110px;
+      border-radius: 10px;
+      font-size: 56px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .flip-card::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .label {
+      position: absolute;
+      bottom: 6px;
+      font-size: 10px;
+      letter-spacing: 1px;
+      opacity: 0.6;
+    }
+
+    .animate {
+      animation: flip 0.6s ease-in-out;
+    }
+
+    @keyframes flip {
+      0% { transform: rotateX(0deg); }
+      50% { transform: rotateX(90deg); }
+      100% { transform: rotateX(0deg); }
+    }
+  </style>
 </head>
 <body>
-<div class="clock" id="clock"></div>
 
-<script>
-function updateClock() {
-  const now = new Date();
-  document.getElementById("clock").innerText =
-    now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
-setInterval(updateClock, 1000);
-updateClock();
-</script>
+  <div class="clock">
+    <div class="flip-card" id="hours">
+      00
+      <div class="label">HRS</div>
+    </div>
+    <div class="flip-card" id="minutes">
+      00
+      <div class="label">MIN</div>
+    </div>
+  </div>
+
+  <script>
+    let prevHours = "";
+    let prevMinutes = "";
+
+    function updateClock() {
+      const now = new Date();
+      let hours = now.getHours().toString().padStart(2, "0");
+      let minutes = now.getMinutes().toString().padStart(2, "0");
+
+      const hoursEl = document.getElementById("hours");
+      const minutesEl = document.getElementById("minutes");
+
+      if (hours !== prevHours) {
+        hoursEl.classList.add("animate");
+        setTimeout(() => {
+          hoursEl.firstChild.textContent = hours;
+          hoursEl.classList.remove("animate");
+        }, 300);
+        prevHours = hours;
+      }
+
+      if (minutes !== prevMinutes) {
+        minutesEl.classList.add("animate");
+        setTimeout(() => {
+          minutesEl.firstChild.textContent = minutes;
+          minutesEl.classList.remove("animate");
+        }, 300);
+        prevMinutes = minutes;
+      }
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+
 </body>
 </html>
