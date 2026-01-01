@@ -1,40 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<style>
-body {
-  margin: 0;
-  background: #F7EFE5;
-  font-family: Poppins, sans-serif;
-  color: #5A4A42;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-.date {
-  text-align: center;
-}
-.day {
-  font-size: 28px;
-}
-.full-date {
-  font-size: 16px;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>Monthly Calendar</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .calendar {
+      width: 300px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .month {
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    .year {
+      font-size: 12px;
+      opacity: 0.6;
+      margin-top: 2px;
+    }
+
+    .weekdays, .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+    }
+
+    .weekdays div {
+      font-size: 11px;
+      opacity: 0.6;
+      padding: 6px 0;
+    }
+
+    .days div {
+      padding: 10px 0;
+      font-size: 14px;
+      border-radius: 6px;
+    }
+
+    .today {
+      background: #fff;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .empty {
+      opacity: 0.2;
+    }
+  </style>
 </head>
 <body>
-<div class="date">
-  <div class="day" id="day"></div>
-  <div class="full-date" id="fullDate"></div>
-</div>
 
-<script>
-const now = new Date();
-document.getElementById("day").innerText =
-  now.toLocaleDateString(undefined, { weekday: 'long' });
-document.getElementById("fullDate").innerText =
-  now.toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
-</script>
+  <div class="calendar">
+    <div class="header">
+      <div class="month" id="month"></div>
+      <div class="year" id="year"></div>
+    </div>
+
+    <div class="weekdays">
+      <div>MO</div>
+      <div>TU</div>
+      <div>WE</div>
+      <div>TH</div>
+      <div>FR</div>
+      <div>SA</div>
+      <div>SU</div>
+    </div>
+
+    <div class="days" id="days"></div>
+  </div>
+
+  <script>
+    const now = new Date();
+    const monthEl = document.getElementById("month");
+    const yearEl = document.getElementById("year");
+    const daysEl = document.getElementById("days");
+
+    const months = [
+      "JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE",
+      "JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"
+    ];
+
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const today = now.getDate();
+
+    monthEl.textContent = months[month];
+    yearEl.textContent = year;
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Adjust for Monday start
+    const startDay = firstDay === 0 ? 6 : firstDay - 1;
+
+    for (let i = 0; i < startDay; i++) {
+      const empty = document.createElement("div");
+      empty.classList.add("empty");
+      daysEl.appendChild(empty);
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const day = document.createElement("div");
+      day.textContent = d;
+
+      if (d === today) {
+        day.classList.add("today");
+      }
+
+      daysEl.appendChild(day);
+    }
+  </script>
+
 </body>
 </html>
